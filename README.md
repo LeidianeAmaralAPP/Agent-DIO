@@ -92,6 +92,9 @@ Abra o endereço exibido no terminal e selecione o agente `agenttaskmanager`.
   reduzir o risco de o fuso horário exibir o card com um dia de diferença.
 - **Conexão centralizada:** valida as credenciais e reutiliza uma função
   comum para conectar ao Trello e localizar o quadro configurado.
+- **Criação com dados completos:** exige nome e descrição não vazios. Se faltar
+  um deles ou não estiver claro, o agente pergunta antes de tentar criar o
+  card. Quando a pessoa não indica outra data, usa a data de hoje.
 
 ## ✅ Como testar
 
@@ -103,8 +106,9 @@ python -m compileall -q agenttaskmanager
 
 Depois, configure as credenciais e teste pelo `adk web`:
 
-1. Informe uma tarefa e confira se o card aparece em **A fazer** com descrição
-   e vencimento.
+1. Informe uma tarefa sem descrição e confira se o agente pergunta o que deve
+   registrar antes de criar o card. Responda com a descrição e confirme que o
+   card aparece em **A fazer** com vencimento.
 2. Peça para listar as tarefas e filtre por `concluído`.
 3. Relate que concluiu uma tarefa e confirme se o card foi movido para
    **Concluído**.

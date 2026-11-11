@@ -118,11 +118,22 @@ def adicionar_tarefa(
     descricao_da_task: str,
     due_date: str | None = None,
 ) -> dict[str, str]:
-    """Cria um card em A fazer. Use due_date no formato AAAA-MM-DD; sem data, usa hoje."""
+    """Cria um card com nome e descrição não vazios; sem due_date, usa hoje."""
     if not nome_da_task.strip():
         return {"erro": "O nome da tarefa não pode ficar vazio."}
+    if not descricao_da_task.strip():
+        return {
+            "erro": (
+                "A descrição da tarefa não pode ficar vazia. "
+                "Pergunte uma descrição antes de criar o card."
+            )
+        }
 
-    task_date = due_date or get_temporal_context()
+    task_date = (
+        due_date.strip()
+        if due_date and due_date.strip()
+        else get_temporal_context()
+    )
     try:
         trello_due = _trello_due_date(task_date)
     except ValueError as error:
@@ -250,10 +261,13 @@ Você organiza tarefas do dia no quadro do Trello configurado.
 
 No início da conversa, use get_temporal_context e pergunte quais são as
 tarefas de hoje, informando a data retornada. Para cada tarefa informada,
-crie um card com nome, descrição e vencimento de hoje (ou a data que a pessoa
-indicar). Se a descrição não estiver clara, pergunte antes de criar. Depois
-de criar as tarefas recebidas, pergunte se há mais alguma; pare quando a
-pessoa disser que não.
+identifique um nome e uma descrição não vazia. O nome pode ser o resumo curto
+da tarefa; não invente detalhes para preencher a descrição. Se o nome ou a
+descrição estiverem ausentes ou pouco claros, pergunte apenas o dado que falta
+e espere a resposta antes de criar o card. Use o vencimento de hoje, retornado
+por get_temporal_context, salvo quando a pessoa indicar outra data. Depois de
+criar as tarefas recebidas, pergunte se há mais alguma; pare quando a pessoa
+disser que não.
 
 Use listar_tarefas quando pedirem para ver tarefas, aplicando o status
 solicitado quando houver. Use mudar_status_tarefa para mover cards conforme
